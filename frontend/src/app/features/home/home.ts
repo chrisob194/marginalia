@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -6,4 +6,8 @@ import { Component } from '@angular/core';
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {}
+export class Home {
+  
+  public title = signal('This is the title');
+  public content = signal('this is going to be the home page!');
+}

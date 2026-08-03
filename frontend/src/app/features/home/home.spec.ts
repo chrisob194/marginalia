@@ -19,4 +19,11 @@ describe('Home', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render title', async () => {
+    const fixture = TestBed.createComponent(Home);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain('This is the title');
+  });
 });
