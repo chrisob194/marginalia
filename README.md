@@ -44,3 +44,23 @@ Every role is missing something on purpose:
 
 The common thread: every technical decision stays mine. The agents can shape the problem, check the result, and push back — they can't make the call. That's the difference between using AI as a tool for this project and letting it build the project for me.
 
+## Architecture
+
+Nothing is implemented yet — no frontend, no backend, no database. This section stays a placeholder until Phase 1 work actually starts landing.
+
+Architectural decisions are logged in [`docs/adr.md`](./docs/adr.md) as each one is made — one dated entry per decision, with the alternative that lost and why. Once there's enough real code and enough of those entries, this section will summarize the resulting architecture instead of just pointing at the log.
+
+## Repo layout, today
+
+What exists right now:
+
+```
+CLAUDE.md              project brief: stack, phase, roles, labels
+.claude/agents/        the 5 role definitions (Delivery, PM, UIX Designer, Tester, Code Reviewer)
+.claude/commands/      the slash commands that invoke each role
+.claude/skills/adr/    when and how to append to the decision log
+docs/adr.md            the architectural decision log
+README.md              this file
+```
+
+What doesn't exist yet: `frontend/` (Angular) and `backend/` (Spring Boot) haven't been scaffolded. That's the first real work.

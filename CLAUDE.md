@@ -58,6 +58,10 @@ background.
   practices), blocks or approves with reservations by opening follow-up
   issues. ALWAYS answers in a Socratic way, both in review and when the
   user has doubts: never provides the direct solution.
+- **Technical Writer**: owns the `.md` documentation (root `README.md`,
+  per-stack READMEs, all of this file). Audits docs against what the code
+  actually does and rewrites the ones that drifted. Never touches application
+  code, never writes `docs/adr.md`.
 
 ## GitHub labels (create once in the repo)
 - `phase:1` `phase:2` `phase:3`
@@ -67,7 +71,7 @@ background.
   `learn:testcontainers`, `learn:routing` (grows organically, one per
   concept touched)
 
-## Architectural decisions made
-(fills up over time — mini ADR-style log: date, decision, rationale)
-
-- _(empty — first entry after the first issue is closed)_
+## Architectural decisions
+Mini ADR log: `docs/adr.md` — append-only, newest last. Entries are written
+from the main session via the `adr` skill (triggers, pollution guard and
+format live there); read the log for the rationale behind past choices.
