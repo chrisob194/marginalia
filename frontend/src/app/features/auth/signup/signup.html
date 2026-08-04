@@ -1,0 +1,56 @@
+<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+  <div class="w-full max-w-md">
+    <app-brand-header></app-brand-header>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+      <h1 class="text-xl font-semibold text-gray-900">Create your account</h1>
+      <p class="mt-1 text-sm text-gray-500">Start organizing your bookmarks in minutes.</p>
+
+      <!-- toggle: aria-busy reflects the pending state of the mocked submit action -->
+      <form (submit)="onSubmit($event)" class="mt-6 space-y-5" novalidate aria-busy="false">
+
+        <!-- Email field -->
+        <div>
+          <app-text-field [formField]="signupForm.email" id="email" label="Email" type="email"></app-text-field>
+        </div>
+
+        <!-- Password field -->
+        <div>
+          <app-text-field [formField]="signupForm.password" id="password" label="Password"
+            type="password"></app-text-field>
+        </div>
+
+        <!-- Confirm password field -->
+        <div>
+          <app-text-field [formField]="signupForm.confirmPassword" id="confirm-password" label="Confirm password"
+            type="password"></app-text-field>
+        </div>
+
+        <!-- Submit button: default / enabled state -->
+        <app-button label="Create account" type="submit" [disabled]="signupForm().invalid()"></app-button>
+
+        <!-- Submit button: pending / disabled state (shown while the mocked
+                 registration action is in flight; prevents duplicate submits) -->
+        <!--
+            <button
+              type="submit"
+              disabled
+              aria-busy="true"
+              class="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md bg-blue-400 px-4 py-2 text-sm font-medium text-white opacity-75 shadow-sm"
+            >
+              <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              Creating account&hellip;
+            </button>
+            -->
+      </form>
+
+      <p class="mt-6 text-center text-sm text-gray-500">
+        Already have an account?
+        <!-- dynamic action: navigate to /login -->
+        <a href="#" class="font-medium text-blue-600 hover:text-blue-700">Log in</a>
+      </p>
+    </div>
+  </div>
+</main>

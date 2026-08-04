@@ -1,0 +1,15 @@
+<label [for]="id()" class="block text-sm font-medium text-gray-700">{{ label() }}</label>
+<input [type]="type()" [formField]="formField()" [id]="id()" [attr.aria-invalid]="stateInvalid() ? true : null"
+  [attr.aria-describedby]="stateInvalid() ? errorMessageId() : null"
+  class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline focus:outline-blue-500 sm:text-sm" />
+@if (stateInvalid()) {
+<div role="alert" [id]="errorMessageId()">
+  <p class="mt-1 text-sm text-red-600">
+    {{ state().errors().at(0)?.message }}
+    <!-- @for (error of state().errors(); track error) {
+  <p class="mt-1 text-sm text-red-600">
+    {{ error.message }}
+  </p>
+  } -->
+</div>
+}
