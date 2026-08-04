@@ -1,78 +1,139 @@
 # Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.1.
+Angular 22 app for Marginalia. Stack rationale, current phase, and roles
+live in the root [`README.md`](../README.md) and [`CLAUDE.md`](../CLAUDE.md)
+— this file only covers day-to-day commands.
 
-## Development server
+Package manager is **bun** (pinned in `angular.json` → `cli.packageManager`
+and `package.json` → `packageManager`). Use `bun`, not `npm`/`npx`, for
+everything below.
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Setup
 
 ```bash
-ng generate component component-name
+cd frontend
+bun install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Dev server
 
 ```bash
-ng generate --help
+bun run start   # ng serve, http://localhost:4200
 ```
 
-## Building
+No proxy is configured (`serve` target in `angular.json` has no options
+block), so calls to a backend API are not currently forwarded anywhere —
+there is no `backend/` in this repo yet.
 
-To build the project run:
+## Build
 
 ```bash
-ng build
+bun run build          # production build (default configuration)
+bun run watch           # development configuration, rebuilds on change
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The `build` target uses the `@angular/build:application` builder with
+`outputMode: "server"` and `ssr.entry: src/server.ts`: every build produces
+both a browser bundle and a server bundle in `dist/frontend/`.
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Running the SSR output
 
 ```bash
-ng test
+bun run build
+bun run serve:ssr:frontend   # node dist/frontend/server/server.mjs, port 4000 (or $PORT)
 ```
 
-## Running end-to-end tests
+`src/server.ts` today only serves the prerendered/static output and falls
+through to Angular's request handler — the commented-out
+`app.get('/api/{*splat}', ...)` block is not wired to anything. There is no
+API proxying happening at runtime yet.
 
-For end-to-end (e2e) testing, run:
+`src/app/app.routes.server.ts` sets every route (`**`) to
+`RenderMode.Prerender`, so the whole app is currently prerendered at build
+time rather than rendered per-request.
+
+## Tests
 
 ```bash
-ng e2e
+bun run test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Runs the `test` target (`@angular/build:unit-test` builder), which drives
+[Vitest](https://vitest.dev/) with jsdom. Existing specs:
+- `src/app/app.spec.ts`
+- `src/app/features/home/home.spec.ts`
 
-## Additional Resources
+No coverage provider is installed. There is no Karma configuration and no
+`e2e` target — manual end-to-end testing against the running dev server is
+done separately via Chrome MCP (see the `/test-feature` command in the root
+README), not from this project.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Rendering & change detection
+
+- Hydration is enabled via `provideClientHydration(withEventReplay(),
+  withNoIncrementalHydration())` in `src/app/app.config.ts`.
+- No `zone.js` dependency is installed and no explicit
+  `provideZonelessChangeDetection()` call exists — the app runs zoneless
+  under Angular 22's default.
+
+## Styling
+
+Tailwind CSS v4, CSS-first setup: `src/styles.css` is just
+`@import "tailwindcss";`, and `.postcssrc.json` loads `@tailwindcss/postcss`.
+There is no `tailwind.config.*` file — v4 needs none for this setup. No
+template currently uses a Tailwind utility class.
+
+## TypeScript strictness
+
+`tsconfig.json` enables `strict`, `noPropertyAccessFromIndexSignature`,
+`noImplicitReturns`, `noImplicitOverride`, `noFallthroughCasesInSwitch`,
+plus the Angular-specific `strictTemplates`, `strictInjectionParameters`,
+and `strictInputAccessModifiers`.
+
+## Linting / formatting
+
+No ESLint config exists in this project. A Prettier config is inlined in
+`package.json` (`printWidth: 100`, `singleQuote: true`, `*.html` parsed as
+`angular`), but `prettier` itself is not listed as a dependency, so
+`bun run` cannot invoke it yet. `.editorconfig` is present at the repo root
+of this project.
+
+## What's wired, what isn't
+
+Providers currently registered in `src/app/app.config.ts`:
+`provideBrowserGlobalErrorListeners()`, `provideRouter(routes)`,
+`provideClientHydration(...)`.
+
+Not present yet, despite being learning objectives for the current phase
+(see `CLAUDE.md`): `provideHttpClient`, any HTTP interceptor, any route
+guard, any `@Injectable` service, `src/environments/`, and any TypeScript
+path alias. `@angular/forms` is a declared dependency but nothing in `src/`
+imports it yet.
 
 ## Structure
 
-### core/
+What exists today:
 
-Includes singleton services, which are provided just once at root level, for example:
-- HTTP interceptors (auth, error handling, logging)
-- Routing guards
-- Global services (AuthService, ConfigService)
+```
+src/
+  app/
+    app.config.ts          # app-wide providers (browser)
+    app.config.server.ts   # SSR providers
+    app.routes.ts           # client routes
+    app.routes.server.ts    # per-route render mode (prerender)
+    app.ts / app.html       # root component
+    features/
+      home/                 # Home feature (component only, no sub-routes yet)
+  main.ts                  # browser bootstrap
+  main.server.ts            # server bootstrap
+  server.ts                 # Express SSR host
+```
 
-No components or specific logic must be added here. Rule: core never imports from feature
-
-## shared/
-
-Components, pipes and directives that can be reused across the application
-
-## features/
-
-Feature specific components and their routes
+`core/` and `shared/` do not exist yet. When they're created, the rule is:
+- **`core/`** — singleton providers only (HTTP interceptors, route guards,
+  app-wide services such as an eventual `AuthService`). Never imports from
+  a feature.
+- **`shared/`** — components, pipes, and directives reused across more
+  than one feature.
+- **`features/`** — one directory per feature, holding that feature's
+  components and (if needed) its own routes.
