@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
-import { apply, form, FormField, validate } from '@angular/forms/signals';
+import { apply, form, FormField, submit, validate } from '@angular/forms/signals';
 import { Router } from '@angular/router';
-import { catchError, EMPTY, switchMap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../core/auth-service';
 import { BrandHeader } from '../../../shared/components/brand-header/brand-header';
 import { Button } from "../../../shared/components/button/button";
@@ -54,13 +54,14 @@ export class Signup {
   onSubmit(event: Event): void {
     event.preventDefault();
 
-    const formData = this.signupModel();
-    this.authService.signup(formData).pipe(
-      catchError(error => {
-        alert(error); // TODO: improve with some dialog that shows the error. Backend first!
-        return EMPTY;
-      }),
-      switchMap(() => this.router.navigate(['/']))
-    ).subscribe();;
+    submit(this.signupForm, async (form) => {
+      try {
+        await firstValueFrom(this.authService.signup(form().value()));
+        await this.router.navigate(['/']);
+      } catch (error) {
+        // TODO: improve with some dialog that shows the error. Backend first!
+        alert(error);
+      }
+    });
   }
 }

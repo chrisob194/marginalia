@@ -18,7 +18,8 @@
         </div>
 
         <!-- Submit button: default / enabled state -->
-        <app-button label="Create account" type="submit" [disabled]="loginForm().invalid()"></app-button>
+        <app-button label="Create account" type="submit"
+          [disabled]="loginForm().invalid() || loginForm().submitting()"></app-button>
       </form>
     </div>
   </div>

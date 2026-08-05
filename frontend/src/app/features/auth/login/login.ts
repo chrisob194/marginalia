@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, submit } from '@angular/forms/signals';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { firstValueFrom, switchMap } from 'rxjs';
 import { AuthService } from '../../../core/auth-service';
 import { BrandHeader } from '../../../shared/components/brand-header/brand-header';
 import { Button } from '../../../shared/components/button/button';
@@ -29,9 +29,14 @@ export class Login {
   onSubmit(event: Event): void {
     event.preventDefault();
 
-    const { email, password } = this.loginForm().value();
-    this.authService.login({ email, password }).pipe(
-      switchMap(() => this.router.navigate(['/']))
-    ).subscribe();
+    submit(this.loginForm, async (form) => {
+      try {
+        await firstValueFrom(this.authService.login(form().value()));
+        await this.router.navigate(['/']);
+      } catch (error) {
+        // TODO: improve with some dialog that shows the error. Backend first!
+        alert(error);
+      }
+    });
   }
 }

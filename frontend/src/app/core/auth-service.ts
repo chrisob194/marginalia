@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Service, signal } from '@angular/core';
-import { Observable, of, tap, throwError } from 'rxjs';
+import { map, Observable, of, tap, throwError, timer } from 'rxjs';
 import { Credentials, Session, SignupData, User } from '../shared/models/auth.model';
 
 @Service()
@@ -29,7 +29,10 @@ export class AuthService {
       // mock for the duplicated case
       return throwError(() => new Error('Email already in use.'));
     }
-    return of({ email: data.email }).pipe(
+
+    // mock slow request
+    return timer(1000).pipe(
+      map(() => ({ email: data.email })),
       tap(user => this.session.set({ token: 'some-mock-token', user }))
     );
   }

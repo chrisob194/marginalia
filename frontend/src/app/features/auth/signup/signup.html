@@ -25,7 +25,8 @@
         </div>
 
         <!-- Submit button: default / enabled state -->
-        <app-button label="Create account" type="submit" [disabled]="signupForm().invalid()"></app-button>
+        <app-button label="Create account" type="submit"
+          [disabled]="signupForm().invalid() || signupForm().submitting()"></app-button>
       </form>
 
       <p class="mt-6 text-center text-sm text-gray-500">
