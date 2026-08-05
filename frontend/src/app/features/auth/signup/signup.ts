@@ -25,7 +25,12 @@ export class Signup {
     apply(schemaPath.email, emailSchema);
     apply(schemaPath.password, passwordSchema);
 
-    validate(schemaPath.confirmPassword, ({ value, valueOf }) => {
+    validate(schemaPath.confirmPassword, ({ value, valueOf, state }) => {
+
+      if (!state.touched) {
+        return null;
+      }
+
       const confirmPassword = value();
       const password = valueOf(schemaPath.password);
 
