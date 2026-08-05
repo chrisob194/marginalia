@@ -9,12 +9,12 @@
 
         <!-- Email field -->
         <div>
-          <app-text-field [formField]="loginForm.email" id="email" label="Email" type="email"></app-text-field>
+          <app-text-field [formField]="loginForm.email" id="email" label="Email" type="email" autocomplete="email"></app-text-field>
         </div>
 
         <!-- Password field -->
         <div>
-          <app-text-field [formField]="loginForm.password" id="password" label="Password"></app-text-field>
+          <app-text-field [formField]="loginForm.password" id="password" label="Password" autocomplete="off"></app-text-field>
         </div>
 
         <!-- Submit button: default / enabled state -->

@@ -9,13 +9,13 @@
 
         <!-- Email field -->
         <div>
-          <app-text-field [formField]="signupForm.email" id="email" label="Email" type="email"></app-text-field>
+          <app-text-field [formField]="signupForm.email" id="email" label="Email" type="email" autocomplete="email"></app-text-field>
         </div>
 
         <!-- Password field -->
         <div>
           <app-text-field [formField]="signupForm.password" id="password" label="Password"
-            hint="At least 8 characters, mixing letters, numbers and symbols." type="password"></app-text-field>
+            hint="At least 8 characters, mixing letters, numbers and symbols." type="password" autocomplete="off"></app-text-field>
         </div>
 
         <!-- Confirm password field -->

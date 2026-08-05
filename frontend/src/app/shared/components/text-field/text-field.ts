@@ -19,6 +19,8 @@ export class TextField {
 
   hint = input<string>();
 
+  autocomplete = input<'email' | 'off' | null>(null);
+
   private stateInvalid = computed(() => {
     const state = this.formField();
     return state().touched() && state().invalid();
@@ -33,9 +35,9 @@ export class TextField {
     return state().errors().at(0)?.message ?? '';
   })
 
-  protected errorMessageId = computed(() => this.id().concat('error'));
+  protected errorMessageId = computed(() => this.id().concat('-error'));
 
-  protected hintMessageId = computed(() => this.id().concat('hint'));
+  protected hintMessageId = computed(() => this.id().concat('-hint'));
 
   protected ariaInvalid = computed(() => this.stateInvalid() ? true : null);
 
