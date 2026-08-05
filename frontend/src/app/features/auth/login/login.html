@@ -1,106 +1,25 @@
-<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
-  <h1 class="text-xl font-semibold text-gray-900">Create your account</h1>
-  <p class="mt-1 text-sm text-gray-500">Start organizing your bookmarks in minutes.</p>
+<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+  <div class="w-full max-w-md">
+    <app-brand-header></app-brand-header>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+      <h1 class="text-xl font-semibold text-gray-900">Create your account</h1>
+      <p class="mt-1 text-sm text-gray-500">Start organizing your bookmarks in minutes.</p>
 
-  <!-- toggle: aria-busy reflects the pending state of the mocked submit action -->
-  <form class="mt-6 space-y-5" novalidate aria-busy="false">
+      <form (submit)="onSubmit($event)" class="mt-6 space-y-5" novalidate aria-busy="false">
 
-    <!-- Email field -->
-    <div>
-      <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-      <!-- dynamic value: entered email, preserved across all error states,
-               including "already in use" -->
-      <!-- dynamic state: aria-invalid + the red border class toggle together
-               with the error <p> below -->
-      <input type="email" id="email" name="email" autocomplete="email" required value="jane@example.com"
-        aria-invalid="true" aria-describedby="email-error"
-        class="mt-1 block w-full rounded-md border border-red-300 px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline focus:outline-2 focus:outline-blue-500 sm:text-sm" />
-      <!-- dynamic error: exactly one of the following three is shown at a time,
-               driven by the field's validation / mock-response state -->
-      <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
-        <!-- variant: required -->
-        Email is required.
-      </p>
-      <!--
-          <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
-            variant: invalid format
-            Enter a valid email address.
-          </p>
-          <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
-            variant: duplicate account reported by the mocked signup action
-            This email is already registered.
-            <a href="#" class="font-medium underline hover:text-red-800">Log in instead</a>
-          </p>
-          -->
+        <!-- Email field -->
+        <div>
+          <app-text-field [formField]="loginForm.email" id="email" label="Email" type="email"></app-text-field>
+        </div>
+
+        <!-- Password field -->
+        <div>
+          <app-text-field [formField]="loginForm.password" id="password" label="Password"></app-text-field>
+        </div>
+
+        <!-- Submit button: default / enabled state -->
+        <app-button label="Create account" type="submit" [disabled]="loginForm().invalid()"></app-button>
+      </form>
     </div>
-
-    <!-- Password field -->
-    <div>
-      <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-      <!-- dynamic value: entered password (masked) -->
-      <input type="password" id="password" name="password" autocomplete="new-password" required aria-invalid="false"
-        aria-describedby="password-error password-hint"
-        class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline focus:outline-2 focus:outline-blue-500 sm:text-sm" />
-      <p id="password-hint" class="mt-1 text-xs text-gray-500">Use at least 8 characters.</p>
-      <!-- dynamic error: shown when the field is submitted empty -->
-      <p id="password-error" class="mt-1 text-sm text-red-600 hidden" role="alert">
-        Password is required.
-      </p>
-    </div>
-
-    <!-- Confirm password field -->
-    <div>
-      <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm password</label>
-      <!-- dynamic value: entered confirmation (masked) -->
-      <input type="password" id="confirm-password" name="confirmPassword" autocomplete="new-password" required
-        aria-invalid="true" aria-describedby="confirm-password-error"
-        class="mt-1 block w-full rounded-md border border-red-300 px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline focus:outline-2 focus:outline-blue-500 sm:text-sm" />
-      <!-- dynamic error: either of the following two, based on validation state -->
-      <p id="confirm-password-error" class="mt-1 text-sm text-red-600" role="alert">
-        <!-- variant shown: mismatch -->
-        Passwords don't match.
-      </p>
-      <!--
-          <p id="confirm-password-error" class="mt-1 text-sm text-red-600" role="alert">
-            variant: required
-            Please confirm your password.
-          </p>
-          -->
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- Submit button — two mutually-exclusive visual states.          -->
-    <!-- Only one is rendered at a time, toggled on the submission-     -->
-    <!-- pending state to block duplicate submits.                      -->
-    <!-- ============================================================ -->
-
-    <!-- Submit button: default / enabled state -->
-    <button type="submit"
-      class="flex w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-600">
-      Create account
-    </button>
-
-    <!-- Submit button: pending / disabled state (shown while the mocked
-             registration action is in flight; prevents duplicate submits) -->
-    <!--
-        <button
-          type="submit"
-          disabled
-          aria-busy="true"
-          class="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md bg-blue-400 px-4 py-2 text-sm font-medium text-white opacity-75 shadow-sm"
-        >
-          <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-          </svg>
-          Creating account&hellip;
-        </button>
-        -->
-  </form>
-
-  <p class="mt-6 text-center text-sm text-gray-500">
-    Already have an account?
-    <!-- dynamic action: navigate to /login -->
-    <a href="#" class="font-medium text-blue-600 hover:text-blue-700">Log in</a>
-  </p>
-</div>
+  </div>
+</main>
