@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Service, signal } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, tap, throwError } from 'rxjs';
 import { Credentials, Session, SignupData, User } from '../shared/models/auth.model';
 
 @Service()
@@ -25,6 +25,10 @@ export class AuthService {
 
   signup(data: SignupData): Observable<User> {
     // TODO: it's just a mock
+    if (data.email === 'duplicate@test.com') {
+      // mock for the duplicated case
+      return throwError(() => new Error('Email already in use.'));
+    }
     return of({ email: data.email }).pipe(
       tap(user => this.session.set({ token: 'some-mock-token', user }))
     );

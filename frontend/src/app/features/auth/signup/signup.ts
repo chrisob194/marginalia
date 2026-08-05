@@ -1,5 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { apply, form, FormField, validate } from '@angular/forms/signals';
+import { Router } from '@angular/router';
+import { catchError, EMPTY, switchMap } from 'rxjs';
 import { AuthService } from '../../../core/auth-service';
 import { BrandHeader } from '../../../shared/components/brand-header/brand-header';
 import { Button } from "../../../shared/components/button/button";
@@ -7,8 +9,6 @@ import { TextField } from '../../../shared/components/text-field/text-field';
 import { SignupData } from '../../../shared/models/auth.model';
 import { emailSchema } from '../../../shared/validators/email.schema';
 import { passwordSchema } from '../../../shared/validators/password.schema';
-import { switchMap } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -56,6 +56,10 @@ export class Signup {
 
     const formData = this.signupModel();
     this.authService.signup(formData).pipe(
+      catchError(error => {
+        alert(error); // TODO: improve with some dialog that shows the error. Backend first!
+        return EMPTY;
+      }),
       switchMap(() => this.router.navigate(['/']))
     ).subscribe();;
   }
