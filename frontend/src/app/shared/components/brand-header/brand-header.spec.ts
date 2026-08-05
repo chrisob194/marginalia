@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BranchHeader } from './branch-header';
+import { BrandHeader } from './brand-header';
 
-describe('BranchHeader', () => {
-  let component: BranchHeader;
-  let fixture: ComponentFixture<BranchHeader>;
+describe('BrandHeader', () => {
+  let component: BrandHeader;
+  let fixture: ComponentFixture<BrandHeader>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BranchHeader],
+      imports: [BrandHeader],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BranchHeader);
+    fixture = TestBed.createComponent(BrandHeader);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

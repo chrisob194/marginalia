@@ -13,6 +13,10 @@ describe('Button', () => {
 
     fixture = TestBed.createComponent(Button);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('type', 'submit');
+    fixture.componentRef.setInput('label', 'Test');
+
     await fixture.whenStable();
   });
 
