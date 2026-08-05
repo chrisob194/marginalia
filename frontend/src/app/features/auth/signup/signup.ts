@@ -1,11 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { apply, form, FormField, validate } from '@angular/forms/signals';
-import { BrandHeader } from '../../../shared/brand-header/brand-header';
-import { Button } from "../../../shared/button/button";
-import { TextField } from '../../../shared/forms/components/text-field/text-field';
-import { emailSchema } from '../../../shared/forms/validators/email.schema';
-import { passwordSchema } from '../../../shared/forms/validators/password.schema';
-import { SignupData } from '../models/auth.model';
+import { AuthService } from '../../../core/auth-service';
+import { BrandHeader } from '../../../shared/components/brand-header/brand-header';
+import { Button } from "../../../shared/components/button/button";
+import { TextField } from '../../../shared/components/text-field/text-field';
+import { SignupData } from '../../../shared/models/auth.model';
+import { emailSchema } from '../../../shared/validators/email.schema';
+import { passwordSchema } from '../../../shared/validators/password.schema';
+import { switchMap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -15,13 +18,16 @@ import { SignupData } from '../models/auth.model';
 })
 export class Signup {
 
-  signupModel = signal<SignupData>({
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  private readonly signupModel = signal<SignupData>({
     email: '',
     password: '',
     confirmPassword: ''
   });
 
-  signupForm = form(this.signupModel, schemaPath => {
+  readonly signupForm = form(this.signupModel, schemaPath => {
     apply(schemaPath.email, emailSchema);
     apply(schemaPath.password, passwordSchema);
 
@@ -49,6 +55,8 @@ export class Signup {
     event.preventDefault();
 
     const formData = this.signupModel();
-    console.log('form data:', formData);
+    this.authService.signup(formData).pipe(
+      switchMap(() => this.router.navigate(['/']))
+    ).subscribe();;
   }
 }
