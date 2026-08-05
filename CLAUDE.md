@@ -62,6 +62,10 @@ background.
   per-stack READMEs, all of this file). Audits docs against what the code
   actually does and rewrites the ones that drifted. Never touches application
   code, never writes `docs/adr.md`.
+- **Tutor**: crafts a self-contained HTML learning resource for a topic on
+  request — may ask clarifying questions first, always grounds claims in
+  real docs (Angular MCP or web search, never memory). Never touches
+  application code.
 
 ## GitHub labels (create once in the repo)
 - `phase:1` `phase:2` `phase:3`
