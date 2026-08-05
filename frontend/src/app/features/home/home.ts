@@ -1,13 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { BrandHeader } from '../../shared/components/brand-header/brand-header';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [
+    BrandHeader
+  ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
-  
-  public title = signal('This is the title');
-  public content = signal('this is going to be the home page!');
+
 }

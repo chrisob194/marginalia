@@ -1,0 +1,26 @@
+<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+  <div class="w-full max-w-md">
+    <app-brand-header></app-brand-header>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+      <h1 class="text-xl font-semibold text-gray-900">Create your account</h1>
+      <p class="mt-1 text-sm text-gray-500">Start organizing your bookmarks in minutes.</p>
+
+      <form (submit)="onSubmit($event)" class="mt-6 space-y-5" novalidate aria-busy="false">
+
+        <!-- Email field -->
+        <div>
+          <app-text-field [formField]="loginForm.email" id="email" label="Email" type="email" autocomplete="email"></app-text-field>
+        </div>
+
+        <!-- Password field -->
+        <div>
+          <app-text-field [formField]="loginForm.password" id="password" label="Password" autocomplete="off"></app-text-field>
+        </div>
+
+        <!-- Submit button: default / enabled state -->
+        <app-button label="Create account" type="submit"
+          [disabled]="loginForm().invalid() || loginForm().submitting()"></app-button>
+      </form>
+    </div>
+  </div>
+</main>

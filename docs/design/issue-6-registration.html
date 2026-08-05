@@ -1,0 +1,235 @@
+<!doctype html>
+<!--
+  UIX Designer output for issue #6 — "Add registration form with mocked signup action"
+  https://github.com/chrisob194/marginalia/issues/6
+
+  Static reference only: zero JavaScript, zero Angular syntax. To be turned into
+  an Angular component (Signal Forms) by hand. The <head> below only exists so
+  this file can be opened directly in a browser; drop it when porting.
+
+  All states are shown STACKED here so they can be reviewed side by side. In the
+  real component they are mutually exclusive — see the comments on each block.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marginalia — registration (design reference, issue #6)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- Registration page — /register                                 -->
+<!-- Two mutually-exclusive top-level states:                      -->
+<!--   1) the form card (default, editing, error variants, pending) -->
+<!--   2) the success confirmation card (shown after mocked signup  -->
+<!--      succeeds, in place of the form)                           -->
+<!-- Only one of the two is rendered at a time.                     -->
+<!-- ============================================================ -->
+<main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+  <div class="w-full max-w-md">
+
+    <!-- Brand header -->
+    <div class="mb-8 text-center">
+      <a href="#" class="inline-flex items-center justify-center gap-2 text-2xl font-semibold text-gray-900">
+        <svg class="h-7 w-7 text-blue-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M6 2a2 2 0 0 0-2 2v18l8-5.333L20 22V4a2 2 0 0 0-2-2H6z" />
+        </svg>
+        Marginalia
+      </a>
+      <p class="mt-2 text-sm text-gray-500">Save, note, and tag what matters.</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SUCCESS STATE                                                  -->
+    <!-- Rendered instead of the form once the mocked registration      -->
+    <!-- action resolves successfully. Alternatively this section could  -->
+    <!-- be swapped for an immediate redirect to the login route — in    -->
+    <!-- that case this markup is unused.                                -->
+    <!-- ============================================================ -->
+    <section
+      aria-live="polite"
+      class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8 text-center"
+    >
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+        <svg class="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h1 class="mt-4 text-lg font-semibold text-gray-900">Account created</h1>
+      <p class="mt-2 text-sm text-gray-500">
+        <!-- dynamic value: registered email -->
+        Welcome! Your account for <span class="font-medium text-gray-700">jane@example.com</span> is ready.
+      </p>
+      <a
+        href="#"
+        class="mt-6 inline-flex w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-600"
+      >
+        <!-- dynamic action: navigate to /login -->
+        Continue to log in
+      </a>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FORM STATE (default)                                           -->
+    <!-- ============================================================ -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+      <h1 class="text-xl font-semibold text-gray-900">Create your account</h1>
+      <p class="mt-1 text-sm text-gray-500">Start organizing your bookmarks in minutes.</p>
+
+      <!-- toggle: aria-busy reflects the pending state of the mocked submit action -->
+      <form class="mt-6 space-y-5" novalidate aria-busy="false">
+
+        <!-- Email field -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <!-- dynamic value: entered email, preserved across all error states,
+               including "already in use" -->
+          <!-- dynamic state: aria-invalid + the red border class toggle together
+               with the error <p> below -->
+          <input
+            type="email"
+            id="email"
+            name="email"
+            autocomplete="email"
+            required
+            value="jane@example.com"
+            aria-invalid="true"
+            aria-describedby="email-error"
+            class="mt-1 block w-full rounded-md border border-red-300 px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline focus:outline-2 focus:outline-blue-500 sm:text-sm"
+          />
+          <!-- dynamic error: exactly one of the following three is shown at a time,
+               driven by the field's validation / mock-response state -->
+          <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
+            <!-- variant: required -->
+            Email is required.
+          </p>
+          <!--
+          <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
+            variant: invalid format
+            Enter a valid email address.
+          </p>
+          <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
+            variant: duplicate account reported by the mocked signup action
+            This email is already registered.
+            <a href="#" class="font-medium underline hover:text-red-800">Log in instead</a>
+          </p>
+          -->
+        </div>
+
+        <!-- Password field -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <!-- dynamic value: entered password (masked) -->
+          <input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="new-password"
+            required
+            aria-invalid="false"
+            aria-describedby="password-error password-hint"
+            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline focus:outline-2 focus:outline-blue-500 sm:text-sm"
+          />
+          <p id="password-hint" class="mt-1 text-xs text-gray-500">Use at least 8 characters.</p>
+          <!-- dynamic error: shown when the field is submitted empty -->
+          <p id="password-error" class="mt-1 text-sm text-red-600 hidden" role="alert">
+            Password is required.
+          </p>
+        </div>
+
+        <!-- Confirm password field -->
+        <div>
+          <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm password</label>
+          <!-- dynamic value: entered confirmation (masked) -->
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirmPassword"
+            autocomplete="new-password"
+            required
+            aria-invalid="true"
+            aria-describedby="confirm-password-error"
+            class="mt-1 block w-full rounded-md border border-red-300 px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline focus:outline-2 focus:outline-blue-500 sm:text-sm"
+          />
+          <!-- dynamic error: either of the following two, based on validation state -->
+          <p id="confirm-password-error" class="mt-1 text-sm text-red-600" role="alert">
+            <!-- variant shown: mismatch -->
+            Passwords don't match.
+          </p>
+          <!--
+          <p id="confirm-password-error" class="mt-1 text-sm text-red-600" role="alert">
+            variant: required
+            Please confirm your password.
+          </p>
+          -->
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Submit button — two mutually-exclusive visual states.          -->
+        <!-- Only one is rendered at a time, toggled on the submission-     -->
+        <!-- pending state to block duplicate submits.                      -->
+        <!-- ============================================================ -->
+
+        <!-- Submit button: default / enabled state -->
+        <button
+          type="submit"
+          class="flex w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-600"
+        >
+          Create account
+        </button>
+
+        <!-- Submit button: pending / disabled state (shown while the mocked
+             registration action is in flight; prevents duplicate submits) -->
+        <!--
+        <button
+          type="submit"
+          disabled
+          aria-busy="true"
+          class="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md bg-blue-400 px-4 py-2 text-sm font-medium text-white opacity-75 shadow-sm"
+        >
+          <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          Creating account&hellip;
+        </button>
+        -->
+      </form>
+
+      <p class="mt-6 text-center text-sm text-gray-500">
+        Already have an account?
+        <!-- dynamic action: navigate to /login -->
+        <a href="#" class="font-medium text-blue-600 hover:text-blue-700">Log in</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<!--
+  ============================================================
+  Wiring notes
+  ============================================================
+  - Per field, toggle aria-invalid + the border color + the error <p> together
+    from Signal Forms field state (touched, invalid, errors()). One variant at
+    a time.
+  - The duplicate-email error and the input values come from the same form-state
+    signals, so entered data is never cleared when the mock reports
+    "email already in use".
+  - The two submit-button variants map to a single `pending` signal on the mocked
+    registration action: swap them and set disabled / aria-busy accordingly.
+  - The success <section> and the form <div> are alternates for one state signal
+    ('form' | 'success'), or replace the success card with a redirect to /login
+    (the issue allows either).
+
+  Repo context at design time:
+  - frontend/src/app/features/home/home.html — only existing markup (placeholder,
+    no conventions to reuse)
+  - frontend/src/styles.css — Tailwind v4 via @import "tailwindcss", no extended
+    config, so only core utilities are used here
+  - frontend/src/app/app.routes.ts — no /register or /login routes yet
+-->
+
+</body>
+</html>
